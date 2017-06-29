@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
-
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.opentok.android.OpentokError;
@@ -18,7 +17,6 @@ import com.opentok.android.Subscriber;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-
 
 public class MainActivity extends AppCompatActivity implements  Session.SessionListener,  PublisherKit.PublisherListener {
     private static String API_KEY = "45903602";
@@ -42,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
         AppEventsLogger.activateApp(this);
 
         //requestPermissions();
-
-
     }
 
     @Override
@@ -61,13 +57,10 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
             mPublisherViewContainer = (FrameLayout)findViewById(R.id.publisher_container);
             mSubscriberViewContainer = (FrameLayout)findViewById(R.id.subscriber_container);
 
-
             // initialize and connect to the session
             mSession = new Session.Builder(this, API_KEY, SESSION_ID).build();
             mSession.setSessionListener(this);
             mSession.connect(TOKEN);
-
-
         } else {
             EasyPermissions.requestPermissions(this, "This app needs access to your camera and mic to make video calls", RC_VIDEO_APP_PERM, perms);
         }
@@ -88,8 +81,6 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
     @Override
     public void onDisconnected(Session session) {
         Log.d(LOG_TAG, "Session Disconnected");
-
-
     }
 
     @Override
