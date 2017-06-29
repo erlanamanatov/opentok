@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.opentok.android.OpentokError;
 import com.opentok.android.Publisher;
 import com.opentok.android.PublisherKit;
@@ -36,7 +38,12 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        requestPermissions();
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+
+        //requestPermissions();
+
+
     }
 
     @Override
@@ -70,17 +77,19 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
     @Override
     public void onConnected(Session session) {
         Log.d(LOG_TAG, "Session Connected");
-    }
-
-    @Override
-    public void onDisconnected(Session session) {
-        Log.d(LOG_TAG, "Session Disconnected");
 
         mPublisher = new Publisher.Builder(this).build();
         mPublisher.setPublisherListener(this);
 
         mPublisherViewContainer.addView(mPublisher.getView());
         mSession.publish(mPublisher);
+    }
+
+    @Override
+    public void onDisconnected(Session session) {
+        Log.d(LOG_TAG, "Session Disconnected");
+
+
     }
 
     @Override

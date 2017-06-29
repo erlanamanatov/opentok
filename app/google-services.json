@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "170501153890",
+    "firebase_url": "https://opentok-f3664.firebaseio.com",
+    "project_id": "opentok-f3664",
+    "storage_bucket": "opentok-f3664.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:170501153890:android:622f32405512c36a",
+        "android_client_info": {
+          "package_name": "com.erkprog.opentok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "170501153890-3m0od6pr98o5qqfmtfelgsi0sg7bmtac.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCa55F6tGoIW4zRzOrJ1I-QusxRYqu-T0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
