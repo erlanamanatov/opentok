@@ -12,6 +12,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -22,8 +25,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String GRAPH_PATH = "me/permissions";
+    private static final String SUCCESS = "success";
     private final static String TAG = "myLogs";
     private CallbackManager mCallbackManager;
 
@@ -38,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         findViewById(R.id.signout).setOnClickListener(this);
         findViewById(R.id.buttonGroups).setOnClickListener(this);
+        findViewById(R.id.buttonDeAuth).setOnClickListener(this);
 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
@@ -81,9 +91,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference myRef = database.getReference("Users");
+                            User fbUser = new User(user.getUid(), user.getDisplayName(), user.getEmail());
+                            myRef.child(user.getUid()).setValue(fbUser);
+
                             Log.d(TAG, user.getDisplayName());
                             Log.d(TAG, user.getEmail());
+                            Log.d(TAG, user.getUid());
                             updateUI(user);
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(TAG, "signInWithCredential:failure", task.getException());
@@ -157,10 +174,50 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         if (i == R.id.buttonGroups){
             if (mAuth.getCurrentUser() != null){
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                //startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                startActivity(new Intent(LoginActivity.this, Room.class));
             } else {
                 Toast.makeText(this, "user == null", Toast.LENGTH_SHORT).show();
             }
         }
+        if (i == R.id.buttonDeAuth){
+            if (!isLoggedIn()) {
+                Toast.makeText(
+                        LoginActivity.this,
+                        //R.string.app_not_logged_in,
+                        "app+not_logged_in",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+            GraphRequest.Callback callback = new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse response) {
+                    try {
+                        if(response.getError() != null) {
+                            Toast.makeText(
+                                    LoginActivity.this,
+//                                        getResources().getString(
+//                                                R.string.failed_to_deauth,
+//                                                response.toString()),
+                                    "failed to deauth",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                        else if (response.getJSONObject().getBoolean(SUCCESS)) {
+                            LoginManager.getInstance().logOut();
+                            // updateUI();?
+                        }
+                    } catch (JSONException ex) { /* no op */ }
+                }
+            };
+            GraphRequest request = new GraphRequest(AccessToken.getCurrentAccessToken(),
+                    GRAPH_PATH, new Bundle(), HttpMethod.DELETE, callback);
+            request.executeAsync();
+        }
+    }
+
+    private boolean isLoggedIn() {
+        AccessToken accesstoken = AccessToken.getCurrentAccessToken();
+        return !(accesstoken == null || accesstoken.getPermissions().isEmpty());
     }
 }
