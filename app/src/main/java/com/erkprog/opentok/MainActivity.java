@@ -38,8 +38,11 @@ public class MainActivity extends AppCompatActivity implements  Session.SessionL
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        SESSION_ID = getIntent().getStringExtra("sessionId");
+        TOKEN = getIntent().getStringExtra("token");
 
-        //requestPermissions();
+
+        requestPermissions();
     }
 
     @Override

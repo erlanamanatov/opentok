@@ -31,5 +31,7 @@
         tools:layout_constraintRight_creator="1"
         android:layout_height="0dp"
         tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"/>
+        tools:layout_constraintLeft_creator="1"
+        android:divider="#E6E0F8"
+        android:dividerHeight="4px"/>
 </android.support.constraint.ConstraintLayout>
